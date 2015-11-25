@@ -1,5 +1,6 @@
 <?php
 require_once('ClassModel.php');
+require_once('ClassMoveModel.php');
 require_once('../common/database/dbconnect.php');
 class ClassService {
 	public function createClass( $data ) {
@@ -66,13 +67,13 @@ class ClassService {
 	}
 
 	public function createClassMove( $classId, $data ) {
-		if( $clasId !== null ) {
+		if( $classId !== null ) {
 			$conn = dbconnect();
 			$lastId = null;
 			$result = null;
 
 			$sql = 'insert into move (NAME, TYPE_ID)'
-				. ' values( "' . $data->name . '", ' . data->typeId . ')';
+				. ' values( "' . $data->name . '", ' . $data->typeId . ')';
 
 			if ($conn->query($sql) === TRUE) {
 				$lastId = $conn->insert_id;
@@ -91,9 +92,44 @@ class ClassService {
 				}
 			}
 
-			return $result;
+			dbDisconnect( $conn );
+
+			return getClassMoves( $classId );
+		}
+	}
+
+	public function getClassMoves( $classId=null ) {
+		if( $classId !== null ) {
+			$conn = dbconnect();
+
+			$sql = 'select move.ID as id, move.NAME as move_name, class_move.MOVE_ORDER as order, move_type.NAME as type from move'
+			 . ' inner join move_type on move_type.ID = move.TYPE_ID'
+			 . ' inner join class_move on class_move.MOVE_ID = move.ID'
+			 . ' where class_move.CLASS_ID = ' . $classId;
+
+			$result = $conn->query($sql);
+
+			$classMoves = Array();
+
+			if ($result->num_rows > 0) {
+			    // output data of each row
+				
+			    while($row = $result->fetch_assoc()) {
+			    	$classMove = new ClassMoveModel();
+
+			    	$classMove->setId( $row["id"] );
+			    	$classMove->setName( $row["name"] );
+			    	$classMove->setType( $row["type"] );
+			    	$classMove->setOrder( $row["order"] );
+
+			    	array_push( $classMoves, $classMove );
+
+			    }
+			}
 
 			dbDisconnect( $conn );
+
+			return $classMoves;
 		}
 	}
 }

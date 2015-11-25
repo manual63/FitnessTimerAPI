@@ -62,9 +62,17 @@ class ClassController
     /**
     * Creates a move and adds it to a class
     *
+    * @url GET /getclassmove/$moveId
+    */
+    public function getClassMove( $moveId = null ) {
+        return "Class Moves";
+    }
+
+    /**
+    * Creates a move and adds it to a class
+    *
     * @url POST /addclassmove/$classId
     */
-
     public function addClassMove( $classId = null, $data ) {
         $result = new stdClass();
 
