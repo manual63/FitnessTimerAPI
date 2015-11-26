@@ -82,6 +82,37 @@ class ClassController
 
             $result->classMoves = $classMoves;
         }
+
+        return $result;
+    }
+
+        /**
+    * Creates a move and adds it to a class
+    *
+    * @url GET /getclassmoves/$classId
+    */
+    public function getClassMoves( $classId = null ) {
+        $result = new stdClass();
+
+        if( $classId !== null ) {
+            $classService = new ClassService();
+            $classMoves = $classService->getClassMoves( $classId );
+
+            $result->classMoves = $classMoves;
+        }
+
+        return $result;
+    }
+
+    /**
+    *
+    * @url GET /movetypes
+    */
+    public function getMoveTypes() {
+        $result = new stdClass();
+        $classService = new ClassService();
+        $result->moveTypes = $classService->getMoveTypes();
+        return $result;
     }
 
     /**
@@ -99,33 +130,6 @@ class ClassController
 
         return array("id" => $id, "name" => null); // serializes object into JSON
     }
-
-    /**
-     * Gets the list of class moves
-     *
-     * @url GET /classmoves/$id
-     * @url GET /classmoves/current
-     */
-    public function getClassMoves($id = null) {
-        // if ($id) {
-        //     $user = User::load($id); // possible user loading method
-        // } else {
-        //     $user = $_SESSION['user'];
-        // }
-
-        return array("id" => $id, "name" => null); // serializes object into JSON
-
-
-            // select class.name, move.name as move, move_type.NAME as type from class
-            // inner join class_move
-            // on class.id = class_move.CLASS_ID
-            // inner join move
-            // on move.id = class_move.MOVE_ID
-            // inner join move_type
-            // on move.TYPE_ID = move_type.ID
-    }
-
-
 
     /**
      * Saves a user to the database

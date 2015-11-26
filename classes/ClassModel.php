@@ -24,7 +24,7 @@ class ClassModel {
 		$this->name = $value;
 	}
 
-	public function getname() {
+	public function getName() {
 		return $this->name;
 	}
 
