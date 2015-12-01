@@ -71,14 +71,14 @@ class ClassController
     /**
     * Creates a move and adds it to a class
     *
-    * @url POST /addclassmove/$classId
+    * @url PUT /classmove
     */
-    public function addClassMove( $classId = null, $data ) {
+    public function addClassMove( $data=null ) {
         $result = new stdClass();
 
-        if( $classId !== null ) {
+        if( $data !== null ) {
             $classService = new ClassService();
-            $classMoves = $classService->createClassMove( $classId, $data );
+            $classMoves = $classService->createClassMove( $data );
 
             $result->classMoves = $classMoves;
         }
@@ -106,6 +106,18 @@ class ClassController
 
     /**
     *
+    * @url DELETE /classmove/$classId/$moveId
+    */
+    public function removeClassMove( $classId=null, $moveId=null ) {
+        if( $moveId !== null && $classId !== null ) {
+            $classService = new ClassService();
+
+            $result = $classService->removeClassMove( $moveId, $classId );
+        }
+    }
+
+    /**
+    *
     * @url GET /movetypes
     */
     public function getMoveTypes() {
@@ -113,6 +125,24 @@ class ClassController
         $classService = new ClassService();
         $result->moveTypes = $classService->getMoveTypes();
         return $result;
+    }
+
+    /**
+    *
+    * @url PUT /moveorder/$classId
+    */
+    public function updateMoveOrder( $classId = null, $data ) {
+        if( $classId !== null ) {
+            $classService = new ClassService();
+
+            $result = $classService->updateMoveOrder( $classId, $data );
+
+            return $result;
+        }
+        else {
+            return "Need classId";
+        }
+        
     }
 
     /**
